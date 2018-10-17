@@ -1,12 +1,12 @@
-/************************************************************************************/
-/*                                                                                  */
-/*  Laboratorni uloha c. 1 z predmetu IMP.                                          */
-/*                                                                                  */
-/*  Komunikace pres UART.                                                           */
-/*                                                                                  */
-/*  Reseni vytvoril a odevzdava: (Dominik Harmim, xharmi00).                        */
-/*                                                                                  */
-/************************************************************************************/
+/******************************************************************************/
+/*                                                                            */
+/*  Laboratorni uloha c. 1 z predmetu IMP.                                    */
+/*                                                                            */
+/*  Komunikace pres UART.                                                     */
+/*                                                                            */
+/*  Reseni vytvoril a odevzdava: (Dominik Harmim, xharmi00).                  */
+/*                                                                            */
+/******************************************************************************/
 
 
 #include <string.h>
@@ -14,7 +14,9 @@
 #include "MKL05Z4.h"
 
 
-/* Inicializace MCU - zakladni nastaveni hodin, vypnuti watchdogu. */
+/**
+ * Inicializace MCU - zakladni nastaveni hodin, vypnuti watchdogu.
+ */
 void MCUInit(void)
 {
 	MCG->C4 |= MCG_C4_DMX32_MASK | MCG_C4_DRST_DRS(0x01);
@@ -23,7 +25,9 @@ void MCUInit(void)
 }
 
 
-/* Inicializace pinu pro vysilani a prijem pres UART - RX a TX. */
+/**
+ * Inicializace pinu pro vysilani a prijem pres UART - RX a TX.
+ */
 void PinInit(void)
 {
 	SIM->SOPT2 |= SIM_SOPT2_UART0SRC(0x01);
@@ -38,7 +42,10 @@ void PinInit(void)
 }
 
 
-/* Inicializace UART - nastaveni prenosove rychlosti 115200Bd, 8 bitu, bez parity. */
+/**
+ * Inicializace UART - nastaveni prenosove rychlosti 115200Bd,
+ * 8 bitu, bez parity.
+ */
 void UART0Init(void)
 {
 	UART0->C2 &= ~(UART0_C2_TE_MASK | UART0_C2_RE_MASK);
@@ -54,19 +61,29 @@ void UART0Init(void)
 	UART0->S1 |= 0x1F;
 	UART0->S2 |= 0xC0;
 
-	UART0->C2 |= UART0_C2_TE_MASK | UART0_C2_RE_MASK; // Zapnout vysilac i prijimac.
+	// Zapnout vysilac i prijimac.
+	UART0->C2 |= UART0_C2_TE_MASK | UART0_C2_RE_MASK;
 }
 
 
-/* Vyslani jednoho znaku pres UART - funkce vycka, az je vysilaci buffer prazdny, pak posle. */
+/**
+ * Vyslani jednoho znaku pres UART - funkce vycka,
+ * az je vysilaci buffer prazdny, pak posle.
+ */
 void SendCh(char ch)
 {
-	while (!(UART0->S1 & UART0_S1_TDRE_MASK) && !(UART0->S1 & UART0_S1_TC_MASK));
+	while (
+		!(UART0->S1 & UART0_S1_TDRE_MASK)
+		&& !(UART0->S1 & UART0_S1_TC_MASK)
+	);
 	UART0->D = ch;
 }
 
 
-/* Prijeti jednoho znaku pres UART - funkce ceka na prichozi znak a ten vrati jako vysledek. */
+/**
+ * Prijeti jednoho znaku pres UART - funkce ceka na prichozi znak a
+ * ten vrati jako vysledek.
+ */
 char ReceiveCh(void)
 {
 	while (!(UART0->S1 & UART0_S1_RDRF_MASK));
@@ -74,7 +91,9 @@ char ReceiveCh(void)
 }
 
 
-/* Vysilani retezce ukonceneho 0. */
+/**
+ * Vysilani retezce ukonceneho 0.
+ */
 void SendStr(char *s)
 {
 	int i = 0;
@@ -83,14 +102,18 @@ void SendStr(char *s)
 }
 
 
-/* Funkce zpozdeni - funkce skonci po nastavenem case. */
+/**
+ * Funkce zpozdeni - funkce skonci po nastavenem case.
+ */
 void delay(int bound)
 {
 	for (int i = 0; i < bound; i++);
 }
 
 
-/* Pipnuti pres bzucak na PTB13 - generuje 500 period obdelnikoveho signalu. */
+/**
+ * Pipnuti pres bzucak na PTB13 - generuje 500 period obdelnikoveho signalu.
+ */
 void beep(void)
 {
 	for (int q = 0; q < 500; q++)
@@ -103,16 +126,23 @@ void beep(void)
 }
 
 
-/* Hlavni funkce. */
+/**
+ * Hlavni funkce.
+ */
 int main(void)
 {
-	MCUInit(); /* Zakladni inicializace vlastniho MCU - hodiny, watchdog. */
-	PinInit(); /* Inicializace vstupu a vystupu potrebnych pro tuto ulohu - piny RX a TX UART0. */
-	UART0Init(); /* Inicializace modulu UART0 - nastaveni prenosove rychlosti, parametru prenosu. */
+	// Zakladni inicializace vlastniho MCU - hodiny, watchdog.
+	MCUInit();
+	// Inicializace vstupu a vystupu potrebnych pro tuto ulohu -
+	// piny RX a TX UART0.
+	PinInit();
+	// Inicializace modulu UART0 - nastaveni prenosove rychlosti,
+	// parametru prenosu.
+	UART0Init();
 
-	SendStr("Login> ");	// Vyslani vyzvy k zadani loginu
+	SendStr("Login> "); // Vyslani vyzvy k zadani loginu
 
-	char login[9]; // misto pro prijaty retezec
+	char login[9] = {'\0'}; // misto pro prijaty retezec
 	for(int n = 0; n < 8; n++)
 	{
 		char c = ReceiveCh();
@@ -120,7 +150,7 @@ int main(void)
 		login[n] = c; // Postupne se uklada do pole.
 	}
 
-	if (strcmp(login, "xharmi00"))
+	if (strcmp(login, "xharmi00") == 0)
 	{
 		beep(); // potvrzeni pristupu
 	}
