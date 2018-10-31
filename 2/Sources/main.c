@@ -87,7 +87,7 @@ void PORTB_IRQHandler(void)
 	delay(100000);
 
 	// button left
-	if ((PORTB_ISFR & BUTTON_LEFT_MASK) && !(PTB->PDIR & BUTTON_LEFT_MASK))
+	if (PORTB_ISFR & BUTTON_LEFT_MASK && !(PTB->PDIR & BUTTON_LEFT_MASK))
 	{
 		flash();
 		PORTB_ISFR |= BUTTON_LEFT_MASK;
