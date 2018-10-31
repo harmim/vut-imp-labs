@@ -86,36 +86,41 @@ void PORTB_IRQHandler(void)
 
 	delay(100000);
 
-	if (PORTB_ISFR & 0x5 && PTB->PDIR & BUTTON_LEFT_MASK) // button left
+	// button left
+	if ((PORTB_ISFR & BUTTON_LEFT_MASK) && !(PTB->PDIR & BUTTON_LEFT_MASK))
 	{
 		flash();
-		PORTB_ISFR &= ~0x5;
+		PORTB_ISFR |= BUTTON_LEFT_MASK;
 	}
-	else if (PORTB_ISFR & 0x7 && PTB->PDIR & BUTTON_RIGHT_MASK) // button right
+	// button right
+	else if (PORTB_ISFR & BUTTON_RIGHT_MASK && !(PTB->PDIR & BUTTON_RIGHT_MASK))
 	{
 		beep();
-		PORTB_ISFR &= ~0x7;
+		PORTB_ISFR |= BUTTON_RIGHT_MASK;
 	}
-	else if (PORTB_ISFR & 0x3 && PTB->PDIR & BUTTON_UP_MASK) // button up
-	{
-		flash();
-		delay(100000);
-		flash();
-		PORTB_ISFR &= ~0x3;
-	}
-	else if (PORTB_ISFR & 0x6 && PTB->PDIR & BUTTON_DOWN_MASK) // button down
-	{
-		beep();
-		delay(100000);
-		beep();
-		PORTB_ISFR &= ~0x6;
-	}
-	else if (PORTB_ISFR & 0x4 && PTB->PDIR & BUTTON_CENT_MASK) // button center
+	// button up
+	else if (PORTB_ISFR & BUTTON_UP_MASK && !(PTB->PDIR & BUTTON_UP_MASK))
 	{
 		flash();
 		delay(100000);
+		flash();
+		PORTB_ISFR |= BUTTON_UP_MASK;
+	}
+	// button down
+	else if (PORTB_ISFR & BUTTON_DOWN_MASK && !(PTB->PDIR & BUTTON_DOWN_MASK))
+	{
 		beep();
-		PORTB_ISFR &= ~0x4;
+		delay(100000);
+		beep();
+		PORTB_ISFR |= BUTTON_DOWN_MASK;
+	}
+	// button center
+	else if (PORTB_ISFR & BUTTON_CENT_MASK && !(PTB->PDIR & BUTTON_CENT_MASK))
+	{
+		flash();
+		delay(100000);
+		beep();
+		PORTB_ISFR |= BUTTON_CENT_MASK;
 	}
 }
 
@@ -130,12 +135,12 @@ void init_hardware(void)
 	SIM->CLKDIV1 |= SIM_CLKDIV1_OUTDIV1(0x00);
 	SIM->COPC = SIM_COPC_COPT(0x00); /* Vypni WatchDog. */
 
-	// Konfigurace portu B, kam jsou pripojena tlacitka a RGB LED.
+	// Konfigurace portu B, kam jsou pripojena tlacitka a RED LED.
 
 	SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK; /* Aktivuj hodiny pro PORTB. */
 
 	// Konfigurace pinu s tlacitky, porty jsou po resetu implicitne jako vstupy.
-	for(uint8_t i = 3; i <= 7; i++)
+	for (uint8_t i = 3; i <= 7; i++)
 	{
 		PORTB->PCR[i] =
 			PORT_PCR_ISF(0x01) /* Nuluj ISF (Interrupt Status Flag). */
