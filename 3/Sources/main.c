@@ -51,7 +51,7 @@ void SysInit(void)
 // Cisla kanalu pro LED vizte schema laboratorniho pripravku.
 void PortInit(void)
 {
-	PORTB->PCR[9] = PORT_PCR_MUX(0x02); //  PTB9: TPM0_CH2 -> red
+	PORTB->PCR[9] = PORT_PCR_MUX(0x02); // PTB9: TPM0_CH2 -> red
 	PORTB->PCR[10] = PORT_PCR_MUX(0x02); // PTB10: TPM0_CH1 -> green
 	PORTB->PCR[11] = PORT_PCR_MUX(0x02); // PTB11: TPM0_CH0 -> blue
 }
@@ -72,7 +72,7 @@ void Timer0Init(void)
 	//    ridicim registru TPM0_CnSC tohoto kanalu, konkretne:
 	//    Edge-aligned PWM: High-true pulses (clear Output on match, set
 	//    Output on reload), preruseni ani DMA requests nebudou vyuzivany.
-	TPM0_CnSC(2) = 0x28;
+	TPM0_CnSC(0) = 0x28; // modra
 
 	// 4. Nastavte konfiguraci casovace v jeho stavovem a ridicim registru (SC):
 	//    (up counting mode pro Edge-aligned PWM, Clock Mode Selection (01),
@@ -117,7 +117,7 @@ int main(void)
 		// 5. Priradte aktualni hodnotu compare do komparacniho registru
 		//    zvoleneho kanalu casovace TPM0 (napr. kanal c. 2 pro manipulaci
 		//    s cervenou slozkou RGB LED).
-		TPM0_CnV(2) = compare;
+		TPM0_CnV(0) = compare; // modra
 
 		// 6. LEDku nechte urcity cas svitit dle aktualni hodnoty stridy.
 		//    Ve skutecnosti LED velmi rychle blika, pricemz vhodnou frekvenci
@@ -126,6 +126,6 @@ int main(void)
 		//    sviti intenzitou odpovidajici aktualni stride PWM. ZDE VYUZIJTE
 		//    PRIPRAVENOU FUNKCI delay, EXPERIMENTALNE NASTAVTE HODNOTU CEKANI
 		//    TAK, ABY BYLY PLYNULE ZMENY JASU LED DOBRE PATRNE.
-		delay(50000);
+		delay(10000);
 	}
 }
