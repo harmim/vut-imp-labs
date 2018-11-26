@@ -1,11 +1,11 @@
 /******************************************************************************/
 /*                                                                            */
-/* Laboratorni uloha c. 3 z predmetu IMP                                      */
+/* Laboratorni uloha c. 3 z predmetu IMP.                                     */
 /*                                                                            */
 /* Demonstrace rizeni jasu/barvy RGB LED pomoci PWM signalu generovaneho      */
 /* casovacem.                                                                 */
 /*                                                                            */
-/* Reseni vytvoril(a) a odevzdava: (Dominik Harmim, xharmi00)                 */
+/* Reseni vytvoril(a) a odevzdava: (Dominik Harmim, xharmi00).                */
 /*                                                                            */
 /******************************************************************************/
 

@@ -4,7 +4,7 @@
 /*                                                                            */
 /*  Aplikace GPIO pro obsluhu tlacitek s vyuzitim preruseni.                  */
 /*                                                                            */
-/*  Reseni vytvoril a odevzdava: (Dominik Harmim, xharmi00)                   */
+/*  Reseni vytvoril a odevzdava: (Dominik Harmim, xharmi00).                  */
 /*                                                                            */
 /******************************************************************************/
 
