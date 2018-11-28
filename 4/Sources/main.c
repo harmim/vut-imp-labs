@@ -165,7 +165,7 @@ void ADC0_Init(void)
  * jedna se o standardni ceckovsky retezec, ktery musi byt ukoncen znakem \0! */
 void ADC0_IRQHandler(void)
 {
-	float value = ADC0_RA * 3.3 / 255;
+	float value = ADC0_RA * 3.3 / 255.0;
 	sprintf(result, "%1.2f", value);
 }
 /******************************************************************************/
