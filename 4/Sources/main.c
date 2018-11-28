@@ -43,7 +43,7 @@
 /* Maska desetinne tecky na PTA10 - DP sviti v log. 0. */
 #define DOT_ON_MASK 0x03FF
 
-#define DELAY_LEDD 2000
+#define DELAY_LEDD 1500
 
 
 const unsigned int digit[] = {N0, N1, N2, N3, N4, N5, N6, N7, N8, N9};
@@ -144,8 +144,8 @@ void ADC0_Init(void)
 	ADC0_SC3 |= 0xF;
 	// zdroj hodinoveho signalu: (Bus clock)/2, clock divider = 8, 8-bit
 	ADC0_CFG1 = 0x61;
-	// povoleni preruseni a aktivace cinnosti prevodniku
-	ADC0_SC1A = 0x40;
+	// povoleni preruseni a aktivace cinnosti prevodniku (kanal 6)
+	ADC0_SC1A = 0x46;
 }
 
 
@@ -165,7 +165,8 @@ void ADC0_Init(void)
  * jedna se o standardni ceckovsky retezec, ktery musi byt ukoncen znakem \0! */
 void ADC0_IRQHandler(void)
 {
-	sprintf(result, "%1.2f", (float) ADC0_RA);
+	float value = ADC0_RA * 3.3 / 255;
+	sprintf(result, "%1.2f", value);
 }
 /******************************************************************************/
 
